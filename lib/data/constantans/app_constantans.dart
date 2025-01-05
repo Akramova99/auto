@@ -12,7 +12,6 @@ class AppConstantans {
   static RegExp noMinusOrLettersNoZero = RegExp(r'^[^0a-zA-Z-]');
   static RegExp textRegExp = RegExp("[a-zA-Z]");
   static RegExp phoneRegExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-
   static SystemUiOverlayStyle getOverlayStyle() =>
       const SystemUiOverlayStyle(statusBarColor: AppColors.transparent);
 
@@ -40,6 +39,17 @@ class AppConstantans {
   ];
 
 
+static List<String> mavzular = [
+  "УМУМИЙ КОИДАЛАР УМУМИЙ ВАЗИФАЛАР",
+  "ЙУЛ БЕЛГИЛАРИ",
+  "ЙУЛ ЧИЗИКЛАРИ",
+  "ХАРАКАТЛАНИШ ТАРТИБИ",
+  "ЙУЛ ХАРАКАТИНИ ТАРТИБГА СОЛИШ",
+  "ХАРАКАТЛАНИШНИНГ АЛОХИДА ШАРОИТЛАРИ",
+  "Транспорт воситаларидан фойдаланишни тақиқловчи шартлар ва ҳаракат хавфсизлиги".toUpperCase(),
+  "Биринчи тиббий ёрдам кўрсатиш".toUpperCase(),
+];
+static  String currentLanguage = "uz";
 
   static List<String> items() =>
       List.generate(37, (index) => "Bilet ${index+1}");

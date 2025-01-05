@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:auto/data/service/db_service.dart';
-import 'package:auto/data/service/network_service.dart';
 import 'package:auto/logic/sign_in/sign_in_cubit.dart';
 import 'package:auto/view/pages/home_page.dart';
 import 'package:auto/view/utils/extensions/size.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:logger/logger.dart';
 
 import '../../../data/constantans/app_constantans.dart';
 import '../../utils/app_colors.dart';
@@ -28,7 +30,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController phoneController;
   late TextEditingController passwordController;
-
+  String countryPhone = '';
   @override
   void initState() {
     super.initState();
@@ -92,7 +94,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   initialCountryCode: 'UZ',
                   onChanged: (phone) {
-                    print(phone.completeNumber);
+                    log(phone.completeNumber);
+                    Logger().w(phone.number);
+                    setState(() {
+                      countryPhone = phone.countryCode;
+                    });
+                    Logger().w(countryPhone);
                   },
                 ),
                 Padding(
@@ -122,54 +129,54 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontWeight: FontWeight.w500, color: AppColors.cF8),
                       ),
                     )),
-             BlocBuilder<SignInCubit, SignInState>(
-  builder: (context, state) {
-    if (state is SignInInitial) {
-      return GlobalButton(
-        onTap: () async {
-          context.read<SignInCubit>().login(
-              phoneController.text.toString(),
-              passwordController.text.toString());
-        },
-        text: "Kirish",
-        color: AppColors.cE3E9ED,
-        textColor: AppColors.black,
-      );
-    }
+                BlocBuilder<SignInCubit, SignInState>(
+                  builder: (context, state) {
+                    if (state is SignInInitial) {
+                      return GlobalButton(
+                        onTap: () async {
+                          context.read<SignInCubit>().login(
+                              countryPhone + phoneController.text.toString(),
+                              passwordController.text.toString());
+                        },
+                        text: "Kirish",
+                        color: AppColors.cE3E9ED,
+                        textColor: AppColors.black,
+                      );
+                    }
 
-    if (state is SignInLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    if (state is SignInFailure) {
-      ToastService.showError(state.errorMessage);
-    }
-    if (state is SignInSuccess) {
-      TokenManager.saveToken(state.loginResponse.accessToken!);
-      //TokenManager.getToken();
-      NetworkService.header(token:  state.loginResponse.accessToken!);
-      ToastService.showSuccess("Muvaffaqiyatli kirdingiz");
+                    if (state is SignInLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is SignInFailure) {
+                      ToastService.showError(state.errorMessage);
+                    }
+                    if (state is SignInSuccess) {
+                      DbService.saveToken(state.loginResponse.accessToken!);
+                      DbService.getToken();
+                      Logger().e(DbService.getToken());
+                      //TokenManager.getToken();
+                      ToastService.showSuccess("Muvaffaqiyatli kirdingiz");
 
-      // Navigator'ni post frame ichida chaqirish
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(context, HomePage.id);
-      });
-    }
+                      // Navigator'ni post frame ichida chaqirish
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.pushReplacementNamed(context, HomePage.id);
+                      });
+                    }
 
-    return GlobalButton(
-      onTap: () async {
-        context.read<SignInCubit>().login(
-            phoneController.text.toString(),
-            passwordController.text.toString());
-      },
-      text: "Kirish",
-      color: AppColors.cE3E9ED,
-      textColor: AppColors.black,
-    );
-  },
-),
-
+                    return GlobalButton(
+                      onTap: () async {
+                        context.read<SignInCubit>().login(
+                            countryPhone + phoneController.text.toString(),
+                            passwordController.text.toString());
+                      },
+                      text: "Kirish",
+                      color: AppColors.cE3E9ED,
+                      textColor: AppColors.black,
+                    );
+                  },
+                ),
                 20.getH(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto/logic/tab_index/tab_index_cubit.dart';
 import 'package:auto/logic/themed_questions/themed_questions_cubit.dart';
+import 'package:auto/logic/time/time_display.dart';
 import 'package:auto/view/widgets/answers.dart';
 import 'package:auto/view/widgets/box.dart';
 import 'package:auto/view/widgets/tab_element.dart';
@@ -19,8 +20,6 @@ class ThemedQuestionPage extends StatefulWidget {
 }
 
 class _ThemedQuestionPageState extends State<ThemedQuestionPage> {
-  var items = ["Uzb", "Rus"];
-  String myValue = "Uzb";
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +78,7 @@ class _ThemedQuestionPageState extends State<ThemedQuestionPage> {
                 automaticallyImplyLeading: false,
                 title: Row(
                   children: [
+                    TimeDisplayPage(initialTime: state.allLessons.data.length,),
                     GestureDetector(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -92,16 +92,7 @@ class _ThemedQuestionPageState extends State<ThemedQuestionPage> {
                         context.read<TabIndexCubit>().updateState();
                       },
                     ),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        iconSize: 35,
-                        value: myValue,
-                        items: items.map(buildDropdownItem).toList(),
-                        onChanged: (value) => setState(() {
-                          myValue = value!;
-                        }),
-                      ),
-                    ),
+
                   ],
                 ),
                 centerTitle: true,

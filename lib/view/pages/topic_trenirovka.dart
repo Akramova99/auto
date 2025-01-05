@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:auto/logic/all_lessons/all_lessons_cubit.dart';
 import 'package:auto/logic/random_exam/random_exam_cubit.dart';
 import 'package:auto/logic/themed_questions/themed_questions_cubit.dart';
+import 'package:auto/logic/time/time_display.dart';
 import 'package:auto/view/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,10 +36,11 @@ class _TopicTrainerState extends State<TopicTrainer> {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
+         
             GestureDetector(
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: MakeBox(text: "  Testni yakunlash  "),
+                child: MakeBox(text: "  Ortga  "),
               ),
               onTap: () {
                 Navigator.pushReplacementNamed(context, HomePage.id);
@@ -104,6 +106,7 @@ class _TopicTrainerState extends State<TopicTrainer> {
                             itemBuilder: (context, index) {
                               return TestTile(
                                 isExam: widget.isExam,
+                                index: index+1,
                                 lesson: state.lessons[index],
                                 function: () {
                                   widget.isExam?

@@ -4,21 +4,21 @@
 
 import 'dart:convert';
 
-import 'bilet_id_lessons.dart';
+import 'bilet_id_my_model.dart';
 
 RandomTest welcomeFromJson(String str) => RandomTest.fromJson(json.decode(str));
 
 String welcomeToJson(RandomTest data) => json.encode(data.toJson());
 
 class RandomTest {
-  List<QuestionElement> data;
+  List<QuestionElement1> data;
 
   RandomTest({
     required this.data,
   });
 
   factory RandomTest.fromJson(Map<String, dynamic> json) => RandomTest(
-    data: List<QuestionElement>.from(json["data"].map((x) => QuestionElement.fromJson(x))),
+    data: List<QuestionElement1>.from(json["data"].map((x) => QuestionElement1.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:logger/logger.dart';
 
 import '../../../data/constantans/app_constantans.dart';
 import '../../../data/service/db_service.dart';
-import '../../../data/service/network_service.dart';
 import '../../../logic/sign_up/sign_up_cubit.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/custom_styles.dart';
@@ -21,6 +21,7 @@ import '../home_page.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const String id = "SignUpScreen";
+
   const SignUpScreen({super.key});
 
   @override
@@ -31,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isVisible1 = false;
   bool isVisible2 = false;
   bool SignUp = false;
+  String countryPhone = '';
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -89,7 +91,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             10.boxH(),
             IntlPhoneField(
               controller: phoneController,
-              
               decoration: InputDecoration(
                 labelText: 'Telefon Raqam',
                 border: OutlineInputBorder(
@@ -101,10 +102,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               initialCountryCode: 'UZ',
               onChanged: (phone) {
                 log(phone.completeNumber);
+                Logger().w(phone.number);
+
+                setState(() {
+                  countryPhone = phone.countryCode;
+                });
+                Logger().w(countryPhone);
               },
             ),
-        
-         
+
             // const SubText(data: 'Email'),
             // 10.boxH(),
             // GlobalTextField(
@@ -192,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       context.read<SignUpCubit>().registration(
                           nameController.text.trim(),
-                          phoneController.text.toString(),
+                          countryPhone + phoneController.text.toString(),
                           passwordControlller.text.toString());
 
                       // if (!nameCheck) {
@@ -224,13 +230,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ToastService.showError(state.errorMessage);
                 }
                 if (state is SignUpSuccess) {
-                    TokenManager.saveToken(state.registerResponse.accessToken!);
-                     NetworkService.header(token:  state.registerResponse.accessToken!);
-                  ToastService.showSuccess(
-                      "Muvaffaqiyatli ro'yxatdan o'tdingiz");
-                        Navigator.pushReplacementNamed(context, HomePage.id);
-                        
+                  DbService.saveToken(state.registerResponse.accessToken!);
+
+                  if (DbService.getLoggedIn()) {
+                    ToastService.showSuccess(
+                        "Muvaffaqiyatli ro'yxatdan o'tdingiz");
+                  }
+
+                  // Defer navigation to the next microtask
+                  Future.microtask(() {
+                    Navigator.pushReplacementNamed(context, HomePage.id);
+                  });
                 }
+
                 return GlobalButton(
                   onTap: () {
                     bool nameCheck = nameController.text.trim().length > 3;
@@ -250,7 +262,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     context.read<SignUpCubit>().registration(
                         nameController.text.trim(),
-                        phoneController.text.toString(),
+                        countryPhone + phoneController.text.toString(),
                         passwordControlller.text.toString());
 
                     // if (!nameCheck) {

@@ -18,7 +18,7 @@ class TopicTestLoaded extends TopicTestState {
 }
 
 class TopicTestLoaded2 extends TopicTestState {
-  final BiletId lessons;
+  final List<QuestionElement1> lessons;
   TopicTestLoaded2(this.lessons);
 }
 

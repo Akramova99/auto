@@ -1,9 +1,10 @@
-import 'package:auto/data/model/auth_models.dart';
-import 'package:auto/data/model/register_response.dart';
+import 'package:auto/data/model/auth/auth_models.dart';
+import 'package:auto/data/model/auth/register_response.dart';
 import 'package:bloc/bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
+import '../../data/service/db_service.dart';
 import '../../data/service/network_service.dart';
 import '../../view/utils/formaters/formatters.dart';
 
@@ -17,9 +18,9 @@ class SignUpCubit extends Cubit<SignUpState> {
       String cleanedNumber = AppInputFormatters.formatPhoneNumber(
           phone
          );
-      if (cleanedNumber.startsWith('998')) {
-        cleanedNumber = cleanedNumber.substring(3); // Remove the first 3 characters (998)
-      }
+      // if (cleanedNumber.startsWith('998')) {
+      //   cleanedNumber = cleanedNumber.substring(3); // Remove the first 3 characters (998)
+      // }
 
       RegisterModel user = RegisterModel(name: name,phoneNumber: cleanedNumber,password: password);
       Logger().i('Requesting URL: $cleanedNumber');
@@ -39,6 +40,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       }
 
       emit(SignUpSuccess(NetworkService.registerResponse(response)));
+      DbService.setLoggedIn(true);
     } catch (e) {
       emit(SignUpValidationError("Xatolik kuzatilmoqda: $e"));
     }

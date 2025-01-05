@@ -16,7 +16,7 @@ class RandomExamLoaded extends RandomExamsState {
 }
 
 class RandomExamLoaded2 extends RandomExamsState {
-  final TestOfLessons allLessons;
+  final TestOfLessons1 allLessons;
   RandomExamLoaded2(this.allLessons);
 }
 

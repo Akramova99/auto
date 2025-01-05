@@ -25,7 +25,7 @@ class RandomExamsCubit extends Cubit<RandomExamsState> {
       }
 
       //emit(RandomExamLoaded(NetworkService.biletResponse(response)));
-       emit(RandomExamLoaded2(NetworkService.testOfLessons(response)));
+       emit(RandomExamLoaded2(NetworkService.testOfLessons2(response)));
     } catch (e) {
       emit(RandomExamError("An unexpected error occurred: $e"));
     }

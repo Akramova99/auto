@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:auto/data/model/all_lesson.dart';
+import 'package:auto/data/model/auth/login_response.dart';
+import 'package:auto/data/model/auth/register_response.dart';
 import 'package:auto/data/model/bilet_id_lessons.dart';
-import 'package:auto/data/model/login_response.dart';
 import 'package:auto/data/model/random_test.dart';
-import 'package:auto/data/model/register_response.dart';
 import 'package:auto/data/model/test_of_lesson_id.dart';
+import 'package:auto/data/service/db_service.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
@@ -14,11 +15,19 @@ class NetworkService {
 
   static String GET_LESSON = '/api/lesson'; //
   static String LOGIN_URL = '/api/auth/login'; //
+  static String LOGOUT_URL = '/api/auth/logout'; //
   static String SIGN_UP_URL = '/api/auth/register'; //
-  static String GET_TEST = '/api/random_lesson/'; //we are with you
+  static String GET_TEST = '/api/lesson_exam/'; //we are with you
   static String BILET_TEST = '/api/bilet/';
+  static String MEDIUM_CONTROLLER = '/api/medium_control/';
   static String RANDOM_TEST = '/api/random';
-  static String TEST_LESSON = '/api/question/';
+  static String TEST_LESSON = '/api/lesson/';
+  static String USER_DATA = '/api/user';
+  static String SHOW_BILET = '/api/show_bilet';
+  static String STORE_WRONG_QUESTION = '/api/store_wrong_question';
+  static String MY_WRONG_QUESTION = '/api/get_all_wrong_question';
+  static String getEveryWrongQuestion = '/api/get_every_wrong_question';
+
   static Map<String, String> header1 = {
     "Accept": "application/json",
     "Content-Type": "application/json",
@@ -34,7 +43,8 @@ class NetworkService {
     // Tokenni bu yerga qo'shdik
   };
 
-  static Map<String, String> header({String? token}) {
+  static Map<String, String> header() {
+    String? token = DbService.getToken();
     header2 = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -122,8 +132,8 @@ class NetworkService {
   static Future<String?> BILET_TEST_METHOD(
       String id, Map<String, String> params) async {
     try {
-      Uri uri = Uri.https(BASE, BILET_TEST + id, params);
-      Logger().i('Requesting URL: $uri');
+      Uri uri = Uri.https(BASE, BILET_TEST + id + "/question", params);
+      Logger().i('Requesting BILET_TEST_METHOD: $uri');
 
       var response = await get(uri, headers: header2);
       Logger().i('Response Status Code: ${response.statusCode}');
@@ -137,6 +147,137 @@ class NetworkService {
       }
     } catch (e) {
       Logger().e('Error in BILET_TEST_METHOD: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> MEDIUM_CONTROLLER_METHOD(String id) async {
+    try {
+      Uri uri = Uri.https(BASE, MEDIUM_CONTROLLER + id);
+      Logger().i('Requesting MEDIUM_CONTROLLER: $uri');
+
+      var response = await get(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in MEDIUM_CONTROLLER: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> GET_USER_DATA() async {
+    try {
+      Uri uri = Uri.https(BASE, USER_DATA);
+      Logger().i('Requesting GET_USER_DATA: $uri');
+
+      var response = await get(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in GET_USER_DATA: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> LOGOUT() async {
+    try {
+      Uri uri = Uri.https(BASE, LOGOUT_URL);
+      Logger().i('Requesting GET_USER_DATA: $uri');
+      // Map<String, String> header2 = {
+      //   "Accept": "application/json",
+      //   "Authorization":
+      //       "Bearer 13702|mMqYkCrZBJABQG1TqrnLUCmdkfPiqWHBKSdKppLfb5011f31",
+      //   // Tokenni bu yerga qo'shdik
+      // };
+      var response = await post(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in GET_USER_DATA: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> PASS_EXAM() async {
+    try {
+      Uri uri = Uri.https(BASE, SHOW_BILET);
+      Logger().i('Requesting PASS_EXAM: $uri');
+
+      var response = await get(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in PASS_EXAM: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> EVERY_WRONG_TEST() async {
+    try {
+      Uri uri = Uri.https(BASE, getEveryWrongQuestion);
+      Logger().i('Requesting PASS_EXAM: $uri');
+
+      var response = await get(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in PASS_EXAM: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> MY_WRONG_TEST() async {
+    try {
+      Uri uri = Uri.https(BASE, MY_WRONG_QUESTION);
+      Logger().i('Requesting PASS_EXAM: $uri');
+
+      var response = await get(uri, headers: header2);
+      Logger().i('Response Status Code: ${response.statusCode}');
+      Logger().i('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        Logger().w('Failed with status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      Logger().e('Error in PASS_EXAM: $e');
       return null;
     }
   }
@@ -175,7 +316,7 @@ class NetworkService {
   static Future<String?> TEST_LESSON_METHOD(
       String id, Map<String, String> params) async {
     try {
-      Uri uri = Uri.https(BASE, TEST_LESSON + id, params);
+      Uri uri = Uri.https(BASE, TEST_LESSON + id + "/question", params);
       Logger().i('Requesting URL: $uri');
 
       var response = await get(uri, headers: header2);
@@ -216,18 +357,11 @@ class NetworkService {
     }
   }
 
-
-  // static List<TestOfLessons> biletResponse(String response) {
-  //   List<TestOfLessons> welcomeFromJson = List<TestOfLessons>.from(
-  //       json.decode(response).map((x) => TestOfLessons.fromJson(x)));
-
-  //   return welcomeFromJson;
-  // }
-
-  static BiletId fromJsonjon(String str) => BiletId.fromJson(json.decode(str));
-
   static TestOfLessons testOfLessons(String str) =>
       TestOfLessons.fromJson(json.decode(str));
+
+  static TestOfLessons1 testOfLessons2(String str) =>
+      TestOfLessons1.fromJson(json.decode(str));
 
   static biletResponse(String response) {
     dynamic json = jsonDecode(response);

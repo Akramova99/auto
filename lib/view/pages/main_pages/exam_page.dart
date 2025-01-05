@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto/logic/random_exam/random_exam_cubit.dart';
 import 'package:auto/logic/tab_index/tab_index_cubit.dart';
+import 'package:auto/logic/time/time_display.dart';
 import 'package:auto/view/widgets/answers.dart';
 import 'package:auto/view/widgets/box.dart';
 import 'package:auto/view/widgets/tab_element.dart';
@@ -75,6 +76,7 @@ class _RandomExamPageState extends State<RandomExamPage> {
                 automaticallyImplyLeading: false,
                 title: Row(
                   children: [
+                    TimeDisplayPage(initialTime: 25,),
                     GestureDetector(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -84,15 +86,7 @@ class _RandomExamPageState extends State<RandomExamPage> {
                         Navigator.pop(context);
                       },
                     ),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                          iconSize: 35,
-                          value: myValue,
-                          items: items.map(buildDropdownItem).toList(),
-                          onChanged: (value) => setState(() {
-                                myValue = value!;
-                              })),
-                    )
+
                   ],
                 ),
                 centerTitle: true,

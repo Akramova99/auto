@@ -2,8 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/model/auth_models.dart';
-import '../../data/model/login_response.dart';
+import '../../data/model/auth/auth_models.dart';
+import '../../data/model/auth/login_response.dart';
+import '../../data/service/db_service.dart';
 import '../../data/service/network_service.dart';
 import '../../view/utils/formaters/formatters.dart';
 
@@ -18,9 +19,9 @@ class SignInCubit extends Cubit<SignInState> {
           phone
          );
          
-      if (cleanedNumber.startsWith('998')) {
-        cleanedNumber = cleanedNumber.substring(3); // Remove the first 3 characters (998)
-      }
+      // if (cleanedNumber.startsWith('998')) {
+      //   cleanedNumber = cleanedNumber.substring(3); // Remove the first 3 characters (998)
+      // }
 
       LoginModel user = LoginModel(
         phoneNumber: cleanedNumber,
@@ -43,6 +44,7 @@ class SignInCubit extends Cubit<SignInState> {
       }
 
       emit(SignInSuccess(NetworkService.loginResponse(response)));
+      DbService.setLoggedIn(true);
     } catch (e) {
       emit(SignInValidationError("Xatolik kuzatilmoqda: $e"));
     }

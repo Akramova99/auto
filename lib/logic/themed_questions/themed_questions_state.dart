@@ -10,10 +10,7 @@ final class ThemedQuestionsInitial extends ThemedQuestionsState {
 
 class ThemedQuestionLoading extends ThemedQuestionsState {}
 
-class ThemedQuestionLoaded extends ThemedQuestionsState {
-  final List<BiletId> lessons;
-  ThemedQuestionLoaded(this.lessons);
-}
+
 
 class ThemedQuestionLoaded2 extends ThemedQuestionsState {
   final TestOfLessons allLessons;

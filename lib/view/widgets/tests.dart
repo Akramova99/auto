@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 
 class TestTile extends StatelessWidget {
   final bool isExam;
+  final int index;
   final AllLesson2 lesson;
   final Function function;
 
-  const TestTile({super.key, required this.lesson, required this.function,required this.isExam});
+  const TestTile({super.key, required this.lesson, required this.function,required this.isExam ,required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class TestTile extends StatelessWidget {
               radius: 34,
               backgroundColor: Colors.cyanAccent.shade100,
               child: Text(
-                lesson.id.toString(),
+                index.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

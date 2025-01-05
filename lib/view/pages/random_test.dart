@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto/logic/random/random_test_cubit.dart';
 import 'package:auto/logic/tab_index/tab_index_cubit.dart';
+import 'package:auto/logic/time/time_display.dart';
 import 'package:auto/view/widgets/answers.dart';
 import 'package:auto/view/widgets/box.dart';
 import 'package:auto/view/widgets/tab_element.dart';
@@ -69,12 +70,13 @@ class _RandomTestPageState extends State<RandomTestPage> {
         }
         if (state is RandomTestLoaded2) {
           return DefaultTabController(
-            length: state.randomTest .data.length,
+            length: state.randomTest.length,
             child: Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
                 title: Row(
                   children: [
+                    TimeDisplayPage(initialTime: state.randomTest.length,),
                     GestureDetector(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -84,15 +86,7 @@ class _RandomTestPageState extends State<RandomTestPage> {
                         Navigator.pop(context);
                       },
                     ),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                          iconSize: 35,
-                          value: myValue,
-                          items: items.map(buildDropdownItem).toList(),
-                          onChanged: (value) => setState(() {
-                                myValue = value!;
-                              })),
-                    )
+
                   ],
                 ),
                 centerTitle: true,
@@ -136,13 +130,11 @@ class _RandomTestPageState extends State<RandomTestPage> {
                                       labelColor: Colors.black,
                                       unselectedLabelColor: Colors.white,
                                       tabs: List<Widget>.generate(
-                                          state.randomTest.data.length,
-                                          (index) {
+                                          state.randomTest.length, (index) {
                                         return BlocBuilder<TabIndexCubit,
                                             TabIndexState>(
                                           builder: (context, state) {
                                             Logger().d("index $index");
-                                           
 
                                             final isRight =
                                                 state is TabIndexInitial
@@ -151,8 +143,7 @@ class _RandomTestPageState extends State<RandomTestPage> {
 
                                             return Tab(
                                               child: TabElement(
-                                                tabItem:(index+1) 
-                                                    .toString(),
+                                                tabItem: (index + 1).toString(),
                                                 isRight: isRight,
                                               ),
                                             );
@@ -165,7 +156,7 @@ class _RandomTestPageState extends State<RandomTestPage> {
                                   height: 3000,
                                   child: TabBarView(
                                     children: List<Widget>.generate(
-                                        state.randomTest.data.length, (index) {
+                                        state.randomTest.length, (index) {
                                       return BlocBuilder<RandomTestsCubit,
                                           RandomTestsState>(
                                         builder: (context, state) {
@@ -198,8 +189,7 @@ class _RandomTestPageState extends State<RandomTestPage> {
                                               children: [
                                                 Answers(
                                                   myIndex: index,
-                                                  questions:
-                                                      state.randomTest.data,
+                                                  questions: state.randomTest,
                                                 )
                                               ],
                                             );

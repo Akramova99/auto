@@ -16,7 +16,7 @@ class RandomTestLoaded extends RandomTestsState {
 }
 
 class RandomTestLoaded2 extends RandomTestsState {
-  final RandomTest randomTest;
+  final List<QuestionElement1> randomTest;
   RandomTestLoaded2(this.randomTest);
 }
 

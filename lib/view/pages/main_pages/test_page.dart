@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
+import '../../../logic/time/time_display.dart';
+
 class TestPage extends StatefulWidget {
   final int biletId;
   const TestPage({super.key, required this.biletId});
@@ -19,8 +21,7 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  var items = ["Uzb", "Rus"];
-  String myValue = "Uzb";
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class _TestPageState extends State<TestPage> {
         appBar: AppBar(
           title: Row(
             children: [
+              TimeDisplayPage(initialTime: 25,),
               GestureDetector(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -41,15 +43,7 @@ class _TestPageState extends State<TestPage> {
                   //  Navigator.pop(context);
                 },
               ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton(
-                    iconSize: 35,
-                    value: myValue,
-                    items: items.map(buildDropdownItem).toList(),
-                    onChanged: (value) => setState(() {
-                          myValue = value!;
-                        })),
-              )
+   
             ],
           ),
           centerTitle: true,
@@ -143,8 +137,10 @@ class _TestPageState extends State<TestPage> {
 
                                     if (state is TopicTestLoaded2) {
                                       Logger().i("KO'rindi");
+                                       Logger().i(state.lessons[index].image);
                                       return Column(
                                         children: [
+
                                           // Text(AppConstantans.tabTitles[index]
                                           //     .toString()),
                                           // ElevatedButton(
@@ -164,7 +160,7 @@ class _TestPageState extends State<TestPage> {
                                           Answers(
                                             myIndex: index,
                                             questions:
-                                                state.lessons.data.questions,
+                                                state.lessons,
                                           )
                                         ],
                                       );
